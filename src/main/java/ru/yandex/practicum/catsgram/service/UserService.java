@@ -21,6 +21,10 @@ public class UserService {
         return users.values();
     }
 
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(users.get(id));
+    }
+
     public User create(User user) {
         if (user.getEmail() == null || user.getEmail().isBlank()) {
             throw new ConditionsNotMetException("Email должен быть указан");
