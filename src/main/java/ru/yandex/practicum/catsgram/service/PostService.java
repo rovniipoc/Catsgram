@@ -7,10 +7,7 @@ import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
 
 import java.time.Instant;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 // Указываем, что класс PostService - является бином и его
 // нужно добавить в контекст приложения
@@ -20,8 +17,32 @@ public class PostService {
     private final Map<Long, Post> posts = new HashMap<>();
     private final UserService userService;
 
-    public Collection<Post> findAll() {
-        return posts.values();
+    public Collection<Post> findAll(Long from, Long size, String sort) {
+        Collection<Post> response = posts.values();
+        switch (Objects.requireNonNull(SortOrder.from(sort))) {
+            case ASCENDING -> {
+                response = response.stream()
+                        .sorted(Comparator.comparing(Post::getPostDate))
+                        .toList();
+            }
+            case DESCENDING -> {
+                response = response.stream()
+                        .sorted(Comparator.comparing(Post::getPostDate).reversed())
+                        .toList();
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + SortOrder.from(sort));
+        }
+        if (from != null) {
+            response = response.stream()
+                    .skip(from)
+                    .toList();
+        }
+        if (size != null) {
+            response = response.stream()
+                    .limit(size)
+                    .toList();
+        }
+        return response;
     }
 
     public Optional<Post> getPostById(Long id) {
