@@ -49,18 +49,18 @@ public class PostService {
         return Optional.ofNullable(posts.get(id));
     }
 
-    public Post create(Post post) {
-        if (userService.findUserById(post.getAuthorId()).isEmpty()) {
-            throw new ConditionsNotMetException("Автор с id = " + post.getAuthorId() + " не найден");
-        }
-        if (post.getDescription() == null || post.getDescription().isBlank()) {
-            throw new ConditionsNotMetException("Описание не может быть пустым");
-        }
-        post.setId(getNextId());
-        post.setPostDate(Instant.now());
-        posts.put(post.getId(), post);
-        return post;
-    }
+//    public Post create(Post post) {
+//        if (userService.findUserById(post.getAuthorId()).isEmpty()) {
+//            throw new ConditionsNotMetException("Автор с id = " + post.getAuthorId() + " не найден");
+//        }
+//        if (post.getDescription() == null || post.getDescription().isBlank()) {
+//            throw new ConditionsNotMetException("Описание не может быть пустым");
+//        }
+//        post.setId(getNextId());
+//        post.setPostDate(Instant.now());
+//        posts.put(post.getId(), post);
+//        return post;
+//    }
 
     public Post update(Post newPost) {
         if (newPost.getId() == null) {
